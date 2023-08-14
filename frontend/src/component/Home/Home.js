@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { CgMouse } from "react-icons/cg";
 import "./Home.css";
-import Product from "./ProductCard.js";
+import ProductCard from "./ProductCard.js";
 import MetaData from "../layout/MetaData";
 import { clearErrors, getProduct } from "../../actions/productAction";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,9 +13,7 @@ import { useAlert } from "react-alert";
 const Home = () => {
   const alert = useAlert();
   const dispatch = useDispatch();
-  const { loading, error, products } = useSelector(
-    (state) => state.products
-  );
+  const { loading, error, products } = useSelector((state) => state.products);
   useEffect(() => {
     if (error) {
       alert.error(error);
@@ -43,7 +41,7 @@ const Home = () => {
           <div className="container" id="container">
             {products &&
               products.map((product) => (
-                <Product
+                <ProductCard
                   key={product._id}
                   product={product}
                   loading={loading}

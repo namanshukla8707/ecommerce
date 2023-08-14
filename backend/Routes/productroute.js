@@ -38,13 +38,13 @@ router.route("/getproductdetail/:id").get(getProductDetail);
 
 // Route 6: Creating sixth route to "create or update product review" using PUT method and "createProductReview function" from productroutefunction
 router
-  .route("/createproductreview/")
+  .route("/createproductreview")
   .put(isAuthenticatedUser, createProductReview);
 
 // Route 7: Creating seventh route to "get all the reviews of the product" using GET method and "getProductReviews function" from productroutefunction
-router.route("/getproductreviews/").get(getProductReviews);
+router.route("/getproductreviews").get(getProductReviews);
 
 // Route 8: Creating eight route to "delete a product review" using DELETE method and "deleteReview function" from productroutefunction
-router.route("/deletereview/").delete(isAuthenticatedUser, deleteReview);
+router.route("/deletereview").delete(isAuthenticatedUser, deleteReview);
 
 module.exports = router;

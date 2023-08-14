@@ -15,9 +15,11 @@ exports.newOrder = errorasync(async (request, response, next) => {
     taxPrice,
     shippingPrice,
     totalPrice,
+    razorpay_order_id,
   } = request.body;
 
   const order = await Order.create({
+    razorpay_order_id,
     shippingInfo,
     orderItems,
     paymentInfo,

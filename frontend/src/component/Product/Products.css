@@ -8,6 +8,7 @@
   text-align: center;
 }
 .products {
+  min-height: 30vh;
   display: flex;
   margin: 2vmax auto;
   width: 80vw;

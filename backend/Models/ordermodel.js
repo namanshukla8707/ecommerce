@@ -27,6 +27,7 @@ const orderSchema = new mongoose.Schema({
       required: true,
     },
   },
+  razorpay_order_id: { type: String, required: true },
   orderItems: [
     {
       price: {

@@ -2,7 +2,10 @@ import React from "react";
 import "./Cart.css";
 import CartItemCard from "./CartItemCard.js";
 import { useSelector, useDispatch } from "react-redux";
-import { addItemsToCart, removeItemsFromCart } from "../../actions/cartAction";
+import {
+  addItemsToCart,
+  removeItemsFromCart,
+} from "../../actions/cartAction";
 import { Link } from "react-router-dom";
 import { Typography } from "@material-ui/core";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
@@ -12,6 +15,7 @@ import MetaData from "../layout/MetaData";
 const Cart = () => {
   const history = useNavigate();
   const dispatch = useDispatch();
+
   const { cartItems } = useSelector((state) => state.cart);
   const increaseQuantity = (id, quantity, stock) => {
     const newQty = quantity + 1;
@@ -31,8 +35,8 @@ const Cart = () => {
     dispatch(removeItemsFromCart(id));
   };
   const checkoutHandler = () => {
-    history("/login?redirect=shipping")
-  }
+    history("/login?redirect=shipping");
+  };
   return (
     <>
       <MetaData title="Cart" />
@@ -75,7 +79,7 @@ const Cart = () => {
                       +
                     </button>
                   </div>
-                  <p className="cartSubtotal">{`Rs${
+                  <p className="cartSubtotal">{`₹${
                     item.price * item.quantity
                   }`}</p>
                 </div>
@@ -84,7 +88,7 @@ const Cart = () => {
               <div></div>
               <div className="cartGrossTotalBox">
                 <p>Gross Total</p>
-                <p>{`Rs${cartItems.reduce(
+                <p>{`₹${cartItems.reduce(
                   (acc, item) => acc + item.quantity * item.price,
                   0
                 )}`}</p>

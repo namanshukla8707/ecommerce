@@ -8,6 +8,7 @@ var cors = require("cors"); // This package connect client to backend-server
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary");
+const Razorpay = require("razorpay");
 
 const app = express();
 app.use(cors());
@@ -29,7 +30,11 @@ const PORT_NO = process.env.PORT;
 // Connecting to database
 connectToMongo();
 
-
+//connecting to razorpay by key and secret
+exports.instance = new Razorpay({
+  key_id: process.env.RAZORPAY_API_KEY,
+  key_secret: process.env.RAZORPAY_API_SECRET,
+});
 // Connecting backend to cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -41,7 +46,7 @@ cloudinary.config({
 app.use("/api/product", require("./Routes/productroute"));
 app.use("/api/user", require("./Routes/userroute"));
 app.use("/api/order", require("./Routes/orderroute"));
-
+app.use("/api/payment", require("./Routes/paymentroute"));
 // Middleware for Errors
 app.use(errorMiddleware);
 

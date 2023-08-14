@@ -2,9 +2,11 @@ import {
   ADD_TO_CART,
   REMOVE_CART_ITEM,
   SAVE_SHIPPING_INFO,
+  PAYMENT_FAIL,
+  PAYMENT_SUCCESS,
 } from "../constants/cartConstant";
 import axios from "axios";
-
+import CryptoJs from "crypto-js";
 // Add item to cart
 export const addItemsToCart = (id, quantity) => async (dispatch, getState) => {
   const { data } = await axios.get(`/api/product/getproductdetail/${id}`);
@@ -20,7 +22,10 @@ export const addItemsToCart = (id, quantity) => async (dispatch, getState) => {
       quantity,
     },
   });
-  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+  const value = JSON.stringify(getState().cart.cartItems);
+  const secret = "tqrfrg23hfjqng&(#&@($&(@*";
+  const encrypted = CryptoJs.AES.encrypt(value, secret).toString();
+  localStorage.setItem("cartItems", encrypted);
 };
 
 // Remove item from cart
@@ -29,7 +34,10 @@ export const removeItemsFromCart = (id) => async (dispatch, getState) => {
     type: REMOVE_CART_ITEM,
     payload: id,
   });
-  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+   const value = JSON.stringify(getState().cart.cartItems);
+   const secret = "tqrfrg23hfjqng&(#&@($&(@*";
+   const encrypted = CryptoJs.AES.encrypt(value, secret).toString();
+   localStorage.setItem("cartItems", encrypted);
 };
 
 // Saving Shipping Info
@@ -38,5 +46,32 @@ export const saveShippingInfo = (data) => async (dispatch) => {
     type: SAVE_SHIPPING_INFO,
     payload: data,
   });
-  localStorage.setItem("shippingInfo", JSON.stringify(data));
+  const value = JSON.stringify(data);
+  const secret = "tqrfrg23hfjqng&(#&@($&(@*";
+  const encrypted = CryptoJs.AES.encrypt(value, secret).toString();
+  localStorage.setItem("shippingInfo", encrypted);
+};
+
+export const payment = (amount, user) => async (dispatch) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.post(
+      "/api/payment/checkout",
+      { amount, user },
+      config
+    );
+    dispatch({
+      type: PAYMENT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: PAYMENT_FAIL,
+      payload: error.response.data.message,
+    });
+  }
 };
