@@ -9,6 +9,7 @@ const {
   createProductReview,
   getProductReviews,
   deleteReview,
+  getAdminProducts
 } = require("../Controller/productroutefunction");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
@@ -46,5 +47,8 @@ router.route("/getproductreviews").get(getProductReviews);
 
 // Route 8: Creating eight route to "delete a product review" using DELETE method and "deleteReview function" from productroutefunction
 router.route("/deletereview").delete(isAuthenticatedUser, deleteReview);
+
+// Route 9: Creating Ninth route to "get all product" using GET method and "getAdminProduct function" from productroutefunction
+router.route("/admin/products").get(isAuthenticatedUser, authorizeRoles("admin"), getAdminProducts);
 
 module.exports = router;

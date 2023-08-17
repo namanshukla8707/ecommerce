@@ -10,17 +10,22 @@ import {
   NEW_REVIEW_REQUEST,
   NEW_REVIEW_RESET,
   NEW_REVIEW_SUCCESS,
+  ADMIN_PRODUCT_FAIL,
+  ADMIN_PRODUCT_REQUEST,
+  ADMIN_PRODUCT_SUCCESS,
 } from "../constants/productConstants";
 
 // reducer will take 2 things state and actions.
 export const productReducer = (state = { products: [] }, action) => {
   switch (action.type) {
     case ALL_PRODUCT_REQUEST:
+      case ADMIN_PRODUCT_REQUEST:
       return {
         loading: true,
         products: [],
       };
     case ALL_PRODUCT_SUCCESS:
+      case ADMIN_PRODUCT_SUCCESS:
       return {
         loading: false,
         products: action.payload.products,
@@ -29,6 +34,7 @@ export const productReducer = (state = { products: [] }, action) => {
         filteredProductsCount: action.payload.filteredProductsCount,
       };
     case ALL_PRODUCT_FAIL:
+      case ADMIN_PRODUCT_FAIL:
       return {
         loading: false,
         error: action.payload,

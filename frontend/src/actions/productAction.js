@@ -10,6 +10,9 @@ import {
   PRODUCT_DETAILS_FAIL,
   PRODUCT_DETAILS_REQUEST,
   PRODUCT_DETAILS_SUCCESS,
+  ADMIN_PRODUCT_FAIL,
+  ADMIN_PRODUCT_REQUEST,
+  ADMIN_PRODUCT_SUCCESS,
 } from "../constants/productConstants";
 
 export const getProduct =
@@ -30,7 +33,27 @@ export const getProduct =
         payload: error.response.data.message,
       });
     }
-  };
+    };
+  
+export const getAdminProducts =
+  (keyword = "", currentPage = 1, price = [0, 25000], category, rating = 0) =>
+    async (dispatch) => {
+      try {
+        dispatch({ type: ADMIN_PRODUCT_REQUEST });
+
+        let link = `/api/product/fetchallproducts?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&rating[gte]=${rating}`;
+        if (category) {
+          link = `/api/product/fetchallproducts?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}&rating[gte]=${rating}`;
+        }
+        const { data } = await axios.get(link);
+        dispatch({ type: ADMIN_PRODUCT_SUCCESS, payload: data });
+      } catch (error) {
+        dispatch({
+          type: ADMIN_PRODUCT_FAIL,
+          payload: error.response.data.message,
+        });
+      }
+    };
 
 export const getProductDetails = (id) => async (dispatch) => {
   try {

@@ -9,7 +9,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { useNavigate } from "react-router-dom";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import { logout } from "../../../actions/userAction";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -24,8 +24,13 @@ const UserOptions = ({ user }) => {
     { icon: <ListAltIcon />, name: "Orders", func: orders },
     { icon: <PersonIcon />, name: "Profile", func: account },
     {
-      icon: <ShoppingCartIcon style={{color:cartItems.length>0?"#eb4034":"unset"}} />,
-      name: `Cart(${cartItems.length})`, func: cart
+      icon: (
+        <ShoppingCartIcon
+          style={{ color: cartItems.length > 0 ? "#eb4034" : "unset" }}
+        />
+      ),
+      name: `Cart(${cartItems.length})`,
+      func: cart,
     },
     { icon: <ExitToAppIcon />, name: "Logout", func: logoutUser },
   ];
@@ -37,7 +42,7 @@ const UserOptions = ({ user }) => {
     });
   }
   function dashboard() {
-    history("/dashboard");
+    history("/admin/dashboard");
   }
   function orders() {
     history("/orders");
@@ -80,7 +85,7 @@ const UserOptions = ({ user }) => {
             icon={item.icon}
             tooltipTitle={item.name}
             onClick={item.func}
-            tooltipOpen={window.innerWidth<=600?true:false}
+            tooltipOpen={window.innerWidth <= 600 ? true : false}
           ></SpeedDialAction>
         ))}
       </SpeedDial>

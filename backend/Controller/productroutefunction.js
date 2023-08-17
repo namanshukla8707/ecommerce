@@ -40,6 +40,32 @@ exports.getAllProducts = errorasync(async (request, response, next) => {
     });
 });
 
+
+// Get all the products function -- Admin
+exports.getAdminProducts = errorasync(async (request, response, next) => {
+  const resultperpage = 12;
+  const productcount = await Product.countDocuments();
+  // For sending search query.
+  const features = new Features(Product.find(), request.query)
+    .search()
+    .filter();
+
+  let products = await features.query;
+  let filteredProductsCount = products.length;
+  features.pagination(resultperpage);
+  // features class is returning query that's we used it as again n again Product.find() function is very messy.
+  // products = await features.query;
+  response
+    .status(200)
+    .json({
+      success: true,
+      products,
+      productcount,
+      resultperpage,
+      filteredProductsCount,
+    });
+});
+
 //Update the product function -- Admin
 exports.updateProduct = errorasync(async (request, response, next) => {
   let product = await Product.findById(request.params.id);
