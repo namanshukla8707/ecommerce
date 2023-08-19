@@ -47,7 +47,9 @@ exports.paymentVerficiation = errorasync(async (request, response, next) => {
         paymentInfo: paymentInfoUpdate,
       }
     );
-    response.redirect(`http://localhost:3000/paymentCompleted?reference=${request.body.razorpay_payment_id}`);
+    response.redirect(
+      `http://localhost:3000/paymentCompleted?reference=${request.body.razorpay_payment_id}`
+    );
   } else {
     const paymentInfoUpdate = {
       status: "Pending",

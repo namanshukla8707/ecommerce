@@ -35,6 +35,15 @@ import OrderDetails from "./component/Order/OrderDetails.js";
 import Dashboard from "./component/Admin/Dashboard.js";
 import ProductList from "./component/Admin/ProductList.js";
 import Loader from "./component/layout/Loader/Loader";
+import NewProduct from "./component/Admin/NewProduct";
+import UpdateProduct from "./component/Admin/UpdateProduct";
+import OrderList from "./component/Admin/OrderList.js";
+import ProcessOrder from "./component/Admin/ProcessOrder.js";
+import UsersList from "./component/Admin/UsersList.js";
+import UpdateUser from "./component/Admin/UpdateUser.js";
+import ProductReviews from "./component/Admin/ProductReviews.js";
+import Contact from "./component/layout/Contact/Contact.js";
+import About from "./component/layout/About/About.js";
 
 function App() {
   const { isAuthenticated, user, loading } = useSelector((state) => state.user);
@@ -71,6 +80,9 @@ function App() {
               <Route exact path="/products" element={<Products />} />
               <Route path="/products/:keyword" element={<Products />} />
               <Route exact path="/search" element={<Search />} />
+              <Route exact path="/contact" element={<Contact />} />
+
+              <Route exact path="/about" element={<About />} />
               {isAuthenticated === false ? (
                 <Route path="*" element={<Navigate to="/login" />} />
               ) : (
@@ -131,7 +143,9 @@ function App() {
               ) : (
                 <Route exact path="/order/:id" element={<OrderDetails />} />
               )}
-              {isAuthenticated === true && user && user.role === "admin" ? (
+              {isAuthenticated !== false &&
+              user !== null &&
+              user.role === "admin" ? (
                 <Route exact path="/admin/dashboard" element={<Dashboard />} />
               ) : (
                 <Route path="*" element={<Navigate to="/login" />} />
@@ -141,6 +155,74 @@ function App() {
               user !== null &&
               user.role === "admin" ? (
                 <Route exact path="/admin/products" element={<ProductList />} />
+              ) : (
+                <Route path="*" element={<Navigate to="/login" />} />
+              )}
+              {isAuthenticated !== false &&
+              user !== null &&
+              user.role === "admin" ? (
+                <Route exact path="/admin/product" element={<NewProduct />} />
+              ) : (
+                <Route path="*" element={<Navigate to="/login" />} />
+              )}
+              {isAuthenticated !== false &&
+              user !== null &&
+              user.role === "admin" ? (
+                <Route
+                  exact
+                  path="/admin/product/:id"
+                  element={<UpdateProduct />}
+                />
+              ) : (
+                <Route path="*" element={<Navigate to="/login" />} />
+              )}
+              {isAuthenticated !== false &&
+              user !== null &&
+              user.role === "admin" ? (
+                <Route exact path="/admin/orders" element={<OrderList />} />
+              ) : (
+                <Route path="*" element={<Navigate to="/login" />} />
+              )}
+              {isAuthenticated !== false &&
+              user !== null &&
+              user.role === "admin" ? (
+                <Route
+                  exact
+                  path="/admin/order/:id"
+                  element={<ProcessOrder />}
+                />
+              ) : (
+                <Route path="*" element={<Navigate to="/login" />} />
+              )}
+              {isAuthenticated !== false &&
+              user !== null &&
+              user.role === "admin" ? (
+                <Route exact path="/admin/users" element={<UsersList />} />
+              ) : (
+                <Route path="*" element={<Navigate to="/login" />} />
+              )}
+              {isAuthenticated !== false &&
+              user !== null &&
+              user.role === "admin" ? (
+                <Route exact path="/admin/users" element={<UsersList />} />
+              ) : (
+                <Route path="*" element={<Navigate to="/login" />} />
+              )}
+              {isAuthenticated !== false &&
+              user !== null &&
+              user.role === "admin" ? (
+                <Route exact path="/admin/user/:id" element={<UpdateUser />} />
+              ) : (
+                <Route path="*" element={<Navigate to="/login" />} />
+              )}
+              {isAuthenticated !== false &&
+              user !== null &&
+              user.role === "admin" ? (
+                <Route
+                  exact
+                  path="/admin/reviews"
+                  element={<ProductReviews />}
+                />
               ) : (
                 <Route path="*" element={<Navigate to="/login" />} />
               )}

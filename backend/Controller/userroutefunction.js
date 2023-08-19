@@ -255,6 +255,7 @@ exports.updateUserRole = errorasync(async (request, response, next) => {
 // Delete a User -- Admin
 exports.deleteUser = errorasync(async (request, response, next) => {
   const user = await User.findById(request.params.id);
+
   if (!user) {
     return next(
       new ErrorHandler(
@@ -263,6 +264,11 @@ exports.deleteUser = errorasync(async (request, response, next) => {
       )
     );
   }
+
+  // removing user avatar from cloudinary
+  const imageId = user.avatar.public_id;
+  await cloudinary.v2.uploader.destroy(imageId);
+
   await user.deleteOne();
   response
     .status(200)

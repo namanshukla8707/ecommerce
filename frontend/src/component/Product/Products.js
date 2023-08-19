@@ -58,8 +58,8 @@ const Products = ({ match }) => {
       {loading ? (
         <Loader />
       ) : (
-          <>
-            <MetaData title="PRODUCTS -- ECOMMERCE"/>
+        <>
+          <MetaData title="PRODUCTS -- ECOMMERCE" />
           <h2 className="productsHeading">Products</h2>
           <div className="products">
             {products &&

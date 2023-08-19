@@ -3,9 +3,28 @@ const Product = require("../Models/productmodel");
 const ErrorHandler = require("../utils/errorhandler");
 const errorasync = require("../middleware/asyncerror");
 const Features = require("../utils/features");
+const cloudinary = require("cloudinary");
 
 // Create product function -- Admin
 exports.createProduct = errorasync(async (request, response, next) => {
+  let images = [];
+  if (typeof request.body.images === "string") {
+    images.push(request.body.images);
+  } else {
+    images = request.body.images;
+  }
+  const imagesLink = [];
+
+  for (let i = 0; i < images.length; i++) {
+    const result = await cloudinary.v2.uploader.upload(images[i], {
+      folder: "products",
+    });
+    imagesLink.push({
+      public_id: result.public_id,
+      url: result.secure_url,
+    });
+  }
+  request.body.images = imagesLink;
   request.body.user = request.user.id;
 
   const product = await Product.create(request.body);
@@ -29,17 +48,14 @@ exports.getAllProducts = errorasync(async (request, response, next) => {
   features.pagination(resultperpage);
   // features class is returning query that's we used it as again n again Product.find() function is very messy.
   // products = await features.query;
-  response
-    .status(200)
-    .json({
-      success: true,
-      products,
-      productcount,
-      resultperpage,
-      filteredProductsCount,
-    });
+  response.status(200).json({
+    success: true,
+    products,
+    productcount,
+    resultperpage,
+    filteredProductsCount,
+  });
 });
-
 
 // Get all the products function -- Admin
 exports.getAdminProducts = errorasync(async (request, response, next) => {
@@ -55,15 +71,13 @@ exports.getAdminProducts = errorasync(async (request, response, next) => {
   features.pagination(resultperpage);
   // features class is returning query that's we used it as again n again Product.find() function is very messy.
   // products = await features.query;
-  response
-    .status(200)
-    .json({
-      success: true,
-      products,
-      productcount,
-      resultperpage,
-      filteredProductsCount,
-    });
+  response.status(200).json({
+    success: true,
+    products,
+    productcount,
+    resultperpage,
+    filteredProductsCount,
+  });
 });
 
 //Update the product function -- Admin
@@ -73,6 +87,33 @@ exports.updateProduct = errorasync(async (request, response, next) => {
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
   }
+  // adding images to cloudinary
+  let images = [];
+  if (typeof request.body.images === "string") {
+    images.push(request.body.images);
+  } else {
+    images = request.body.images;
+  }
+
+  if (images !== undefined) {
+    // Deleting all the images from cloudinary
+    for (let i = 0; i < product.images.length; i++) {
+      await cloudinary.v2.uploader.destroy(product.images[i].public_id);
+    }
+
+    const imagesLink = [];
+    for (let i = 0; i < images.length; i++) {
+      const result = await cloudinary.v2.uploader.upload(images[i], {
+        folder: "products",
+      });
+      imagesLink.push({
+        public_id: result.public_id,
+        url: result.secure_url,
+      });
+    }
+    request.body.images = imagesLink;
+  }
+
   product = await Product.findByIdAndUpdate(request.params.id, request.body, {
     new: true,
     runValidators: true,
@@ -86,6 +127,10 @@ exports.deleteProduct = errorasync(async (request, response, next) => {
   let product = await Product.findById(request.params.id);
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
+  }
+  // Deleting all the images from cloudinary
+  for (let i = 0; i < product.images.length; i++) {
+    await cloudinary.v2.uploader.destroy(product.images[i].public_id);
   }
   await Product.findByIdAndDelete(request.params.id);
   response

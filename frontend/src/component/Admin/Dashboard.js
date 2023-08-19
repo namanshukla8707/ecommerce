@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Sidebar from "./Sidebar.js";
 import "./Dashboard.css";
 import { Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { Doughnut, Line } from "react-chartjs-2";
+import { getAdminProducts } from "../../actions/productAction.js";
 import {
   Chart as ChartJS,
   LineElement,
@@ -13,15 +15,44 @@ import {
   Legend,
   Tooltip,
   ArcElement,
-  DoughnutController
+  DoughnutController,
 } from "chart.js";
-ChartJS.register(LineElement, CategoryScale, PointElement, LinearScale, Legend, Tooltip, ArcElement, DoughnutController);
+import { getAllOrders } from "../../actions/orderAction.js";
+import { getAllUsers } from "../../actions/userAction.js";
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  PointElement,
+  LinearScale,
+  Legend,
+  Tooltip,
+  ArcElement,
+  DoughnutController
+);
 const Dashboard = () => {
-  // products && products.forEach((item) => {
-  //   if (item.stock === 0) {
-      
-  //   }
-  // })
+
+  const dispatch = useDispatch();
+   const { orders } = useSelector((state) => state.allOrders);
+  const { products } = useSelector((state) => state.products);
+  const { users } = useSelector((state) => state.allUsers);
+  let outOfStock = 0;
+  products &&
+    products.forEach((item) => {
+      if (item.stock === 0) {
+        outOfStock += 1;
+      }
+    });
+  useEffect(() => {
+    dispatch(getAdminProducts());
+    dispatch(getAllOrders());
+    dispatch(getAllUsers());
+  }, [dispatch]);
+   let totalAmount = 0;
+   orders &&
+     orders.forEach((item) => {
+       totalAmount += item.totalPrice;
+     });
+
   const lineState = {
     labels: ["Initial Amount", "Amount Earned"],
     datasets: [
@@ -34,17 +65,16 @@ const Dashboard = () => {
       },
     ],
   };
-  const doughnutState =
-  {
+  const doughnutState = {
     labels: ["Out of Stock", "InStock"],
     datasets: [
       {
         backgroundColor: ["#00A6B4", "#6800B4"],
         hoverBackgroundColor: ["#4B5000", "#35014F"],
-        data: [2, 10],
+        data: [outOfStock, products.length - outOfStock],
       },
     ],
-  }
+  };
   return (
     <div className="dashboard">
       <Sidebar />
@@ -53,30 +83,34 @@ const Dashboard = () => {
         <div className="dashboardSummary">
           <div>
             <p>
-              Total Amount <br /> ₹2000
+              Total Amount <br /> ₹{totalAmount}
             </p>
           </div>
           <div className="dashboardSummaryBox2">
             <Link to="/admin/products">
               <p>Product</p>
-              <p>50</p>
+              <p>{products && products.length}</p>
             </Link>
             <Link to="/admin/orders">
               <p>Orders</p>
-              <p>4</p>
+              <p>{orders && orders.length}</p>
             </Link>
             <Link to="/admin/users">
               <p>Users</p>
-              <p>2</p>
+              <p>{users&&users.length}</p>
             </Link>
           </div>
         </div>
         <div className="lineChart">
           <Line data={lineState}></Line>
         </div>
-        <div className="doughnutChart">
-          <Doughnut data={doughnutState} />
-        </div>
+        {products.length === 0 ? (
+          <div></div>
+        ) : (
+          <div className="doughnutChart">
+            <Doughnut data={doughnutState} />
+          </div>
+        )}
       </div>
     </div>
   );

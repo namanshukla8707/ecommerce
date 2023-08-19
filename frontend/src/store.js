@@ -2,9 +2,13 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import {
+  deleteProductReducer,
+  newProductReducer,
   newReviewReducer,
   productDetailsReducer,
   productReducer,
+  productReviewsReducer,
+  reviewReducer,
 } from "./reducers/productReducer";
 import CryptoJS from "crypto-js";
 import {
@@ -15,8 +19,10 @@ import {
   orderReducer,
 } from "./reducers/orderReducer";
 import {
+  allUsersReducer,
   forgotPasswordReducer,
   profileReducer,
+  userDetailsReducer,
   userReducer,
 } from "./reducers/userReducers";
 
@@ -34,7 +40,13 @@ const reducer = combineReducers({
   orderDetails: orderDetailsReducer,
   allOrders: allOrdersReducer,
   order: orderReducer,
-  newReview:newReviewReducer,
+  newReview: newReviewReducer,
+  newProduct: newProductReducer,
+  deleteProduct: deleteProductReducer,
+  allUsers: allUsersReducer,
+  userDetails: userDetailsReducer,
+  productReviews: productReviewsReducer,
+  review: reviewReducer,
 });
 let data = "";
 if (localStorage.getItem("cartItems")) {
@@ -43,7 +55,7 @@ if (localStorage.getItem("cartItems")) {
 
   data = bytes.toString(CryptoJS.enc.Utf8);
 }
-let data1 ="";
+let data1 = "";
 if (localStorage.getItem("shippingInfo")) {
   const secret = "tqrfrg23hfjqng&(#&@($&(@*";
   const bytes = CryptoJS.AES.decrypt(
@@ -55,12 +67,14 @@ if (localStorage.getItem("shippingInfo")) {
 }
 let initialState = {
   cart: {
-    cartItems: data!=="" // getting data from local storage
-      ? JSON.parse(data) //parse will convert string to object
-      : [],
-    shippingInfo: data1!=="" // getting data from local storage
-      ? JSON.parse(data1) //parse will convert string to object
-      : [],
+    cartItems:
+      data !== "" // getting data from local storage
+        ? JSON.parse(data) //parse will convert string to object
+        : [],
+    shippingInfo:
+      data1 !== "" // getting data from local storage
+        ? JSON.parse(data1) //parse will convert string to object
+        : [],
   },
 };
 

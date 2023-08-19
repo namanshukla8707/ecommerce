@@ -9,17 +9,7 @@ import CryptoJS from "crypto-js";
 import { Link } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 const Payment = () => {
-  // let data = "";
-  // if (sessionStorage.getItem("orderInfo")) {
-  //   const secret = "tqrfrg23hfjqng&(#&@($&(@*";
-  //   const bytes = CryptoJS.AES.decrypt(
-  //     sessionStorage.getItem("orderInfo"),
-  //     secret
-  //   );
-
-  //   data = bytes.toString(CryptoJS.enc.Utf8);
-  // }
-  // const orderInfo = JSON.parse(data);
+ 
   const searchQuery = useSearchParams()[0];
   const payment_id = searchQuery.get("reference");
   return (

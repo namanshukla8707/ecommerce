@@ -83,9 +83,11 @@ exports.updateOrderStatus = errorasync(async (request, response, next) => {
     return next(new ErrorHandler("Your Order have been delivered", 400));
   }
 
-  order.orderItems.forEach(async (o) => {
-    await updateStock(o.product, o.quantity);
-  });
+  if (request.body.status === "Shipped") {
+    order.orderItems.forEach(async (o) => {
+      await updateStock(o.product, o.quantity);
+    });
+  }
 
   order.orderStatus = request.body.status;
 
