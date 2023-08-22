@@ -44,6 +44,7 @@ import UpdateUser from "./component/Admin/UpdateUser.js";
 import ProductReviews from "./component/Admin/ProductReviews.js";
 import Contact from "./component/layout/Contact/Contact.js";
 import About from "./component/layout/About/About.js";
+import NotFound from "./component/layout/Not Found/NotFound";
 
 function App() {
   const { isAuthenticated, user, loading } = useSelector((state) => state.user);
@@ -64,7 +65,7 @@ function App() {
       getRazorpayApiKey();
     }
   }, []);
-
+  window.addEventListener("contextmenu", (e) => e.preventDefault());
   return (
     <>
       {loading !== false ? (
@@ -226,6 +227,7 @@ function App() {
               ) : (
                 <Route path="*" element={<Navigate to="/login" />} />
               )}
+              <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
           </Router>
