@@ -1,5 +1,4 @@
 // All the imports
-const dotenv = require("dotenv");
 const express = require("express");
 const connectToMongo = require("./database");
 const errorMiddleware = require("./middleware/error");
@@ -9,6 +8,7 @@ const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary");
 const Razorpay = require("razorpay");
+const path = require("path");
 
 const app = express();
 app.use(cors());
@@ -24,7 +24,9 @@ process.on("uncaughtException", (error) => {
 });
 
 // To use config.env file we have exported dotenv package and now giving path of the folder
-dotenv.config({ path: "../backend/Config/config.env" });
+if (process.env.NODE_ENV !== "production") {
+ require("dotenv").config({ path: "../backend/Config/config.env" });
+}
 const PORT_NO = process.env.PORT;
 
 // Connecting to database
@@ -47,6 +49,11 @@ app.use("/api/product", require("./Routes/productroute"));
 app.use("/api/user", require("./Routes/userroute"));
 app.use("/api/order", require("./Routes/orderroute"));
 app.use("/api/payment", require("./Routes/paymentroute"));
+
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
+});
 // Middleware for Errors
 app.use(errorMiddleware);
 

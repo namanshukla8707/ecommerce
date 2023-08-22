@@ -8,7 +8,7 @@ const crypto = require("crypto");
 const cloudinary = require("cloudinary");
 
 // Register a user function
-exports.registerUser = errorasync(async (request, response, next) => {  
+exports.registerUser = errorasync(async (request, response, next) => {
   const myCloud = await cloudinary.v2.uploader.upload(request.body.avatar, {
     folder: "avatars",
     width: 150,
@@ -80,7 +80,9 @@ exports.forgotPassword = errorasync(async (request, response, next) => {
   await user.save({ validateBeforeSave: false });
 
   // Generating the reset link.
-  const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
+  const resetPasswordUrl = `${request.protocol}://${request.get(
+    "host"
+  )}/password/reset/${resetToken}`;
 
   // Message in the mail
   const message = `Your password reset token is :- \n\n ${resetPasswordUrl} \n\nIf you have not requested this email then, please ignore it.`;
